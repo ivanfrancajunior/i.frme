@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-black text-white overflow-x-hidden;
+        background-color: #000000;
+    }
+}
+
+/* Menu Mobile Styles */
+#mobile-menu {
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+#mobile-menu.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#mobile-menu.flex {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}

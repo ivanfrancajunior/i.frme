@@ -1,0 +1,64 @@
+---
+---
+<nav class="fixed top-0 left-0 w-full z-50 backdrop-blur-md border-b border-white/10 px-6 md:px-12 py-5">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="/" class="font-condensed text-2xl font-bold tracking-tighter text-white uppercase hover:text-brand-orange transition-colors">
+           I.FRME
+        </a>
+
+        <div class="hidden md:flex gap-8 font-condensed text-sm uppercase tracking-widest text-white/90">
+            <a href="#posts" class="hover:text-brand-orange transition-all">Diário</a>
+            <a href="#gallery" class="hover:text-brand-orange transition-all">Galeria</a>
+            <a href="#footer" class="hover:text-brand-orange transition-all">Contato</a>
+        </div>
+
+        <button id="mobile-btn" class="md:hidden text-white focus:outline-none">
+            <svg id="icon-open" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg id="icon-close" class="hidden w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
+
+    <!-- Menu Mobile Overlay -->
+    <div id="mobile-menu" class="hidden fixed inset-0 top-[72px] w-full h-[calc(100vh-72px)] bg-black/95 z-40 flex flex-col items-center justify-center gap-8">
+        <a href="#posts" class="mobile-link font-condensed text-5xl font-bold uppercase text-white hover:text-brand-orange">Diário</a>
+        <a href="#gallery" class="mobile-link font-condensed text-5xl font-bold uppercase text-white hover:text-brand-orange">Galeria</a>
+        <a href="#footer" class="mobile-link font-condensed text-5xl font-bold uppercase text-brand-orange">Contato</a>
+    </div>
+</nav>
+
+<script>
+    const btn = document.getElementById('mobile-btn');
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+    const links = document.querySelectorAll('.mobile-link');
+
+    if (btn && menu && iconOpen && iconClose) {
+        btn.addEventListener('click', () => {
+            const isOpen = menu.classList.contains('flex');
+            if (isOpen) {
+                menu.classList.remove('flex');
+                menu.classList.add('hidden');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            } else {
+                menu.classList.remove('hidden');
+                menu.classList.add('flex');
+                iconOpen.classList.add('hidden');
+                iconClose.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.remove('flex');
+                menu.classList.add('hidden');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+        });
+    }
+</script>
