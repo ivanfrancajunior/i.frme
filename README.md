@@ -1,43 +1,86 @@
-# Astro Starter Kit: Minimal
+# I.FRME 📸
 
-```sh
-npm create astro@latest -- --template minimal
+Bem-vindo ao repositório do **I.FRME**, um blog pessoal e portfólio de fotografia focado em estética minimalista e alta fidelidade visual (Pixel Perfect).
+
+Construído com **Astro**, **Tailwind CSS** e **React**.
+
+## 🚀 Como Rodar o Projeto
+
+Pré-requisitos: Node.js instalado (v18+ recomendado).
+
+```bash
+# 1. Instalar dependências
+npm install
+
+# 2. Rodar servidor de desenvolvimento (http://localhost:4321)
+npm run dev
+
+# 3. Gerar build de produção (pasta /dist)
+npm run build
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-## 🚀 Project Structure
+## 📝 Guia de Postagens (Mini-Tutorial)
 
-Inside of your Astro project, you'll see the following folders and files:
+O conteúdo do blog é gerenciado através de arquivos **MDX** (Markdown + JSX).
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+### 1. Onde criar os posts?
+Navegue até: `src/content/posts/`.
+Crie um novo arquivo com a extensão `.mdx` (ex: `segunda-viagem.mdx`).
+
+### 2. Cabeçalho (Frontmatter)
+Todo post precisa começar com este bloco de metadados entre três traços (`---`):
+
+```yaml
+---
+title: "Título do Seu Post"
+pubDate: 2026-01-05
+description: "Uma breve descrição que aparece logo abaixo do título."
+author: "Seu Nome"
+category: "Fotografia"
+tags: ["viagem", "urbano"]
+---
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### 3. Escrevendo o Conteúdo e Regras Importantes
+O MDX aceita Markdown comum (`# Título`, `**negrito**`), mas é **mais rigoroso** que o normal.
+Siga estas regras para evitar erros de build:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+*   **Quebras de linha**: Use sempre `<br />` (com a barra no final). Nunca use apenas `<br>`.
+*   **Tags HTML**: Se abrir uma tag, tem que fechar.
+    *   Certo: `<b>Texto</b>`
+    *   Errado: `<b>Texto` (vai quebrar o site!)
 
-Any static assets, like images, can be placed in the `public/` directory.
+### 4. 🖼️ Como Adicionar Imagens (Importante!)
+Para usar imagens locais (da sua pasta `src/assets`), você deve **importá-las** como se fosse código.
 
-## 🧞 Commands
+1.  Coloque sua imagem na pasta `src/assets/posts/`.
+2.  No seu arquivo `.mdx`, logo abaixo do cabeçalho (Frontmatter), faça o import:
 
-All commands are run from the root of the project, from a terminal:
+```mdx
+---
+...frontmatter...
+---
+import minhaFoto from '../../assets/posts/nome-do-arquivo.avif';
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+# Título do Post
 
-## 👀 Want to learn more?
+Aqui vai seu texto...
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+<!-- Para exibir a imagem: -->
+<img src={minhaFoto.src} alt="Descrição da imagem" />
+```
+
+> **Por que assim?**
+> Isso garante que o Astro otimize a imagem e encontre o caminho correto automaticamente, não importa onde o site esteja hospedado.
+
+---
+
+## 🛠️ Tecnologias Principais
+
+*   **Astro 5.0**: Framework web focado em conteúdo.
+*   **Astro Content Collections**: Gerenciamento de posts type-safe.
+*   **Tailwind CSS**: Estilização utility-first.
+*   **React**: Renderização de componentes complexos dentro do Markdown.
+*   **Fontes**: Oswald (Títulos) e Inter (Leitura).
