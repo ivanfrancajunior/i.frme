@@ -11,7 +11,7 @@ cloudinary.config({
 
 // 2. O Astro pede à API todas as imagens da pasta 'portfolio'
 const { resources } = await cloudinary.search
-  .sort_by("created_at")
+  .sort_by("created_at",'desc')
   .max_results(50)
   .execute();
 
