@@ -1,107 +1,113 @@
 ---
+import { v2 as cloudinary } from "cloudinary";
+
+// 1. Configuração com as chaves guardadas no ficheiro .env
+cloudinary.config({
+  cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
+  api_key: import.meta.env.CLOUDINARY_API_KEY,
+  api_secret: import.meta.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
+
+// 2. O Astro pede à API todas as imagens da pasta 'portfolio'
+const { resources } = await cloudinary.search
+  .sort_by("created_at")
+  .max_results(50)
+  .execute();
+
+console.log(resources);
+
+interface Highlight {
+  src: string;
+  title: string;
+  category: string;
+}
+
+// 3. Transformamos os dados brutos da API no formato do nosso mural
+const highlights: Highlight[] = resources.map((foto: any) => ({
+  // Truque: pedimos à API que redimensione a foto dinamicamente (w_800) e ajuste a qualidade (q_auto)
+  src: foto.secure_url.replace("/upload/", "/upload/w_800,q_auto,f_auto/"),
+  // Limpamos o nome do ficheiro para servir de título (ex: "por-do-sol-arpoador.jpg" vira "por do sol arpoador")
+  title: foto.filename.replace(/-/g, " "),
+  category: "2026",
+}));
+
+// Lógica de rotação e cores dos alfinetes (mantida igual)
+const getRotation = (index: number): string => {
+  const rotations: string[] = [
+    "rotate-1",
+    "-rotate-2",
+    "rotate-2",
+    "-rotate-1",
+    "rotate-3",
+    "-rotate-3",
+  ];
+  return rotations[index % rotations.length];
+};
 ---
-<section id="gallery" class="w-full max-w-7xl mx-auto pt-16 px-4 md:px-0">
-    <span class="text-xs font-sans text-gray-400 uppercase tracking-widest mb-8 block">Destaques</span>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]">
+<section
+  id='gallery'
+  class='w-full min-h-screen bg-black pt-16 pb-24 px-4 md:px-8'
+>
+  <div class='max-w-7xl mx-auto mb-12'>
+    <span
+      class='text-xs font-sans text-gray-500 uppercase tracking-widest block mb-2'
+      >Destaques</span
+    >
+  </div>
 
-        <div class="relative bg-[#6395b8] group overflow-hidden cursor-pointer border border-white/5">
-            <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                <h3 class="font-condensed text-3xl font-bold uppercase text-white group-hover:opacity-0 transition-opacity duration-500">
-                    Rotina
-                </h3>
-            </div>
-            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2070&auto=format&fit=crop"
-                 class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-110 group-hover:scale-100"
-                 alt="Rotina">
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                <p class="font-sans text-xs text-white leading-tight">"A poesia no caminho de todos os dias."</p>
-            </div>
+  <div
+    class='max-w-7xl mx-auto columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8'
+  >
+    {
+      highlights.map((photo: Highlight, index: number) => (
+        <div class='break-inside-avoid'>
+          <div
+            class={`relative bg-white p-3 pb-6 md:p-4 md:pb-8 shadow-xl transition-transform duration-300 hover:scale-105 hover:z-50 group cursor-pointer ${getRotation(index)}`}
+          >
+            <a
+              href={photo.src.replace("w_800", "w_1600")}
+              class='glightbox block'
+              data-gallery='mural-gallery'
+            >
+              <img
+                src={photo.src}
+                alt={photo.title || "Fotografia"}
+                class='w-full h-auto block grayscale group-hover:grayscale-0 transition-all duration-500'
+                loading='lazy'
+              />
+            </a>
+          </div>
         </div>
-
-        <div class="relative bg-[#8ea34c] md:col-span-2 group overflow-hidden cursor-pointer border border-white/5">
-            <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                <h3 class="font-condensed text-3xl font-bold uppercase text-white group-hover:opacity-0 transition-opacity duration-500">
-                    Botânica
-                </h3>
-            </div>
-            <img src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?q=80&w=2090&auto=format&fit=crop"
-                 class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-110 group-hover:scale-100"
-                 alt="Botânica">
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                <p class="font-sans text-xs text-white leading-tight">"O verde resistindo entre o concreto."</p>
-            </div>
-        </div>
-
-        <div class="relative bg-[#e8c538] group overflow-hidden cursor-pointer border border-white/5">
-            <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                <h3 class="font-condensed text-3xl font-bold uppercase text-white group-hover:opacity-0 transition-opacity duration-500">
-                    Sabores
-                </h3>
-            </div>
-            <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1974&auto=format&fit=crop"
-                 class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-110 group-hover:scale-100"
-                 alt="Sabores">
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                <p class="font-sans text-xs text-white leading-tight">"Texturas e aromas da cidade."</p>
-            </div>
-        </div>
-
-        <div class="relative bg-[#d66b3b] group overflow-hidden cursor-pointer border border-white/5">
-            <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                <h3 class="font-condensed text-3xl font-bold uppercase text-white group-hover:opacity-0 transition-opacity duration-500">
-                    Luzes
-                </h3>
-            </div>
-            <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2144&auto=format&fit=crop"
-                 class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-110 group-hover:scale-100"
-                 alt="Luzes">
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                <p class="font-sans text-xs text-white leading-tight">"Sombras longas e o sol de fim de tarde."</p>
-            </div>
-        </div>
-
-        <div class="relative bg-[#c9547f] group overflow-hidden cursor-pointer border border-white/5">
-            <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                <h3 class="font-condensed text-3xl font-bold uppercase text-white group-hover:opacity-0 transition-opacity duration-500">
-                    Afeto
-                </h3>
-            </div>
-            <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2069&auto=format&fit=crop"
-                 class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-110 group-hover:scale-100"
-                 alt="Afeto">
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                <p class="font-sans text-xs text-white leading-tight">"Momentos de conexão espontânea."</p>
-            </div>
-        </div>
-
-        <div class="relative bg-[#5d4078] md:col-span-2 group overflow-hidden cursor-pointer border border-white/5">
-            <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                <h3 class="font-condensed text-3xl font-bold uppercase text-white group-hover:opacity-0 transition-opacity duration-500">
-                    Noite
-                </h3>
-            </div>
-            <img src="https://images.unsplash.com/photo-1555685812-4b943f3db990?q=80&w=2070&auto=format&fit=crop"
-                 class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-110 group-hover:scale-100"
-                 alt="Noite">
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                <p class="font-sans text-xs text-white leading-tight">"A cidade quando as luzes acendem."</p>
-            </div>
-        </div>
-
-        <div class="relative bg-white group overflow-hidden cursor-pointer border border-white/5">
-            <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                <h3 class="font-condensed text-3xl font-bold uppercase text-black group-hover:opacity-0 transition-opacity duration-500">
-                    Carros
-                </h3>
-            </div>
-            <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=2083&auto=format&fit=crop"
-                 class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-110 group-hover:scale-100"
-                 alt="Carros">
-            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                <p class="font-sans text-xs text-white leading-tight">"Design clássico e velocidade."</p>
-            </div>
-        </div>
-
-    </div>
+      ))
+    }
+  </div>
 </section>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<script is:inline src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+
+<script is:inline>
+  function initGallery() {
+    // 1. Inicializa a galeria
+    const lightbox = GLightbox({
+      selector: '.glightbox',
+      touchNavigation: true,
+      loop: true,
+      zoomable: true,
+      keyboardNavigation: true
+    });
+
+    // 2. Solução Defensiva: Força a captura da tecla ESC no documento inteiro
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' || event.keyCode === 27) {
+        // Fecha a galeria ativamente caso ela esteja aberta
+        lightbox.close();
+      }
+    });
+  }
+
+  // 3. Cobertura total: garante que a função rode quer você use ViewTransitions do Astro ou não
+  document.addEventListener('DOMContentLoaded', initGallery);
+  document.addEventListener('astro:page-load', initGallery);
+</script>
