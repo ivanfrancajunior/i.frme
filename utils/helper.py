@@ -36,7 +36,7 @@ def gerar_imports_e_tags(diretorio_local, nome_diretorio_assets):
 
 # --- CONFIGURAÇÃO ---
 # Caminho da pasta no seu computador onde estão as fotos
-caminho_da_pasta = r"C:\Users\Junior\Desktop\i.frme\src\assets\posts\w12"
+caminho_da_pasta = r"C:\Users\Junior\Desktop\i.frme\src\assets\posts\w13"
 # Nome da pasta que aparecerá no caminho do import (ex: 'março-semana-2')
 nome_slug_diretorio = r"10-11"
 
